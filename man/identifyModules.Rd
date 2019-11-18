@@ -6,7 +6,7 @@
 \usage{
 identifyModules(graph, data, phenotype, covars = NULL, annotations,
 merge.overlapping=FALSE, better.than.components= TRUE, alpha=0.05,
-level=NULL, representative.method="average", correction.method="bonferroni",
+level=NULL, representativeFunction=representativeAverage, correction.method="bonferroni",
 BPPARAM = SerialParam(progressbar = TRUE))
 }
 \arguments{
@@ -35,8 +35,7 @@ if they are better than all of their components.}
 
 \item{level}{Must be set to the name of the column to be used, if modules should be calculated for pathways.}
 
-\item{representative.method}{the method, that is used for the calculation of the module representation.
-Currently implemented: "eigenmetabolite" and "average"}
+\item{representativeFunction}{the function for calculating the module representative.}
 
 \item{correction.method}{the method that used for multiple testing correction ("bonferroni", "BH", "BY", "fdr", "holm", "hochberg", "hommel", "none").
 Default is set to bonferroni. See \code{\link[stats]{p.adjust}}.}

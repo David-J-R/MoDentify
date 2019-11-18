@@ -18,8 +18,7 @@
 #' @param alpha significance level for accepting the modules.
 #' @param level Must be set to the name of the column to be used, if modules should be calculated for pathways.
 #' @param pathway.column
-#' @param representative.method the method, that is used for the calculation of the module representation.
-#' Currently implemented: "eigenmetabolite" and "average"
+#' @param representativeFunction the function for calculating the module representative.
 #' @param correction.method the method that used for multiple testing correction ("bonferroni", "BH", "BY", "fdr", "holm", "hochberg", "hommel", "none").
 #' Default is set to bonferroni. See \code{\link[stats]{p.adjust}}.
 #' @param BPPARAM An instance of the
@@ -38,7 +37,7 @@
 #' @export identifyModules
 #' @usage identifyModules(graph, data, phenotype, covars = NULL, annotations,
 #' merge.overlapping=FALSE, better.than.components= TRUE, alpha=0.05,
-#' level=NULL, representative.method="average", correction.method="bonferroni",
+#' level=NULL, representativeFunction=representativeAverage, correction.method="bonferroni",
 #' BPPARAM = SerialParam(progressbar = TRUE))
 #' @return a list consisting of four elements.
 #' @examples
@@ -68,7 +67,7 @@ identifyModules <- function(graph, data, phenotype, covars = NULL,
                             better.than.components = TRUE,
                             alpha = 0.05,
                             level = NULL,
-                            representative.method = "average",
+                            representativeFunction=representativeAverage,
                             correction.method = "bonferroni",
                             caching = TRUE,
                             BPPARAM = SerialParam(progressbar = TRUE),
@@ -77,7 +76,7 @@ identifyModules <- function(graph, data, phenotype, covars = NULL,
     
     # for incomplete data only average approach possible
     if (sum(is.na(data)) > 0) {
-        if (representative.method == "eigenmetabolite") {
+        if (as.character(substitute(representativeFunction)) == "representativeEigenMetabolite") {
             stop("Data matrix contains missing values.\n Module identification with eigenmetabolite approach not possible.\n")
         } else {
             warning("Data matrix contains missing values.\n Only complete cases were used for module representatives (average).\n")
@@ -161,7 +160,7 @@ identifyModules <- function(graph, data, phenotype, covars = NULL,
     l<-bplapply(V(graph), greedyModuleSelection, graph=graph, data=data,
                 phenotype=phenotype, covars=covars,  alpha=alpha, cacheFolder = cacheFolder,
                 better.than.components=better.than.components,
-                representative.method = representative.method, 
+                representativeFunction = representativeFunction, 
                 scoringFunction=scoringFunction,
                 BPPARAM = BPPARAM)
     
@@ -216,7 +215,8 @@ identifyModules <- function(graph, data, phenotype, covars = NULL,
             nodes[, adjusted.score := NULL]
             nodes[, adjusted.pval := NULL]
             setnames(nodes, c("moduleID", "nodeID", "name", "label", "order.added", "score.after.adding"))
-            modules <- getMergedModules(graph, data, phenotype, covars, nodes, 
+            modules <- getMergedModules(graph, data, phenotype, covars, nodes,
+                                        representativeFunction=representativeFunction,
                                         scoringFunction=scoringFunction)
             modules$adjusted.score <- p.adjust(p = modules$module.score, n = vcount(graph), method = correction.method)
         }

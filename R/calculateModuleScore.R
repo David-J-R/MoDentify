@@ -9,8 +9,7 @@
 #' It must have the same number of observations as in data.
 #' @param covars a \code{\link[data.table]{data.table}} containing the covariates.
 #' The rows for the observations must be in the same order as in the phenotype vector.
-#' @param representative.method the method, that is used for the calculation of the eigenmetabolites.
-#' Currently implemented: "eigenmetabolite" and "average"
+#' @param representativeFunction the function for calculating the module representative.
 #' @param scoringFunction a scoring function accepting parameters 
 #' moduleRepresentatives, phenotype and covars. See \code{\link[MoDentify]{linearScoring}}
 #'
@@ -44,13 +43,15 @@
 #'   graph = net.graph, nodes = module.nodes,
 #'   data = data, phenotype = qmdiab.phenos$T2D
 #' )
-calculateModuleScore <- function(graph, nodes, data, phenotype, covars = NULL,
-                                 representative.method = "average", scoringFunction=linearScoring) {
+calculateModuleScore <- function(graph, nodes, data, phenotype, covars = NULL, 
+                                 representativeFunction=representativeAverage,
+                                 scoringFunction=linearScoring) {
   # Subsetting the variables for the ones contained in the module
   data <- data[name %in% vertex_attr(graph, "name", nodes)]
 
   # Calculate the pathway representative
-  moduleRepresentatives <- calculateModuleRepresentatives(data, representative.method)
+  #moduleRepresentatives <- calculateModuleRepresentatives(data, representative.method)
+  moduleRepresentatives <- representativeFunction(data)
   
   return(scoringFunction(moduleRepresentatives, phenotype, covars))
 

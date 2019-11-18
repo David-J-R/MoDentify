@@ -5,6 +5,7 @@
 \title{Get Module scores for Merged Modules}
 \usage{
 getMergedModules(graph, data, phenotype, covars, nodes,
+  representativeFunction = representativeAverage,
   scoringFunction = linearScoring)
 }
 \arguments{
@@ -24,6 +25,8 @@ covariates to correct for.}
 
 \item{nodes}{an \code{\link[igraph]{igraph}} object, containing the
 information for the nodes and their new modules.}
+
+\item{representativeFunction}{the function for calculating the module representative.}
 
 \item{scoringFunction}{a scoring function accepting parameters 
 moduleRepresentatives, phenotype and covars. See \code{\link[MoDentify]{linearScoring}}}

@@ -19,8 +19,8 @@ MoDentify is a package for the identification of functional modules,
 \seealso{
 Useful links:
 \itemize{
-  \item \url{https://github.com/David-J-R/MoDentify}
-  \item Report bugs at \url{https://github.com/David-J-R/MoDentify/issues}
+  \item \url{https://github.com/krumsieklab/MoDentify}
+  \item Report bugs at \url{https://github.com/krumsieklab/MoDentify/issues}
 }
 
 }

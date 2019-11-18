@@ -6,7 +6,8 @@
 \usage{
 greedyModuleSelection(nodeNr, graph, data, phenotype, covars = NULL,
   alpha = 0.05, moduleCache = NULL, cacheFolder = NULL,
-  better.than.components = TRUE, representative.method = "average",
+  better.than.components = TRUE,
+  representativeFunction = representativeAverage,
   scoringFunction = linearScoring)
 }
 \arguments{
@@ -31,8 +32,7 @@ The rows for the observations must be in the same order as in the phenotype vect
 \item{better.than.components}{if \code{TRUE}, modules will only be enlarged and accepted,
 if they are better than all of their components.}
 
-\item{representative.method}{the method used for the calculation of the module representatives.
-Currently implemented: "eigenmetabolite" and "average"}
+\item{representativeFunction}{the function for calculating the module representative.}
 
 \item{scoringFunction}{a scoring function accepting parameters 
 moduleRepresentatives, phenotype and covars. See \code{\link[MoDentify]{linearScoring}}}

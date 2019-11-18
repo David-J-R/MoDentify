@@ -13,8 +13,7 @@
 #' @param alpha significance level (type 1 error) for accepting the modules.
 #' @param better.than.components if \code{TRUE}, modules will only be enlarged and accepted,
 #' if they are better than all of their components.
-#' @param representative.method the method used for the calculation of the module representatives.
-#' Currently implemented: "eigenmetabolite" and "average"
+#' @param representativeFunction the function for calculating the module representative.
 #' @param cacheFolder location of the temporary files, where the cache is stored
 #' @param scoringFunction a scoring function accepting parameters 
 #' moduleRepresentatives, phenotype and covars. See \code{\link[MoDentify]{linearScoring}}
@@ -48,7 +47,7 @@
 greedyModuleSelection <- function(nodeNr, graph, data, phenotype, covars = NULL,
                                   alpha = 0.05, moduleCache = NULL, cacheFolder = NULL, 
                                   better.than.components = TRUE, 
-                                  representative.method = "average",
+                                  representativeFunction=representativeAverage,
                                   scoringFunction=linearScoring) {
     
     
@@ -56,7 +55,7 @@ greedyModuleSelection <- function(nodeNr, graph, data, phenotype, covars = NULL,
     ## Calculate score for seed
     
     seed <- calculateModuleScore(graph, nodeNr, data, phenotype, covars, 
-                                 representative.method = representative.method, 
+                                 representativeFunction=representativeFunction, 
                                  scoringFunction=scoringFunction)
     seed.score <- seed$score
     high.score <- seed.score
@@ -75,7 +74,7 @@ greedyModuleSelection <- function(nodeNr, graph, data, phenotype, covars = NULL,
             
             
             neighbor.result <- calculateModuleScore(graph, neighbor, data, phenotype, 
-                                                    covars, representative.method = representative.method, 
+                                                    covars, representativeFunction = representativeFunction, 
                                                     scoringFunction = scoringFunction)
             neighbor.score <- neighbor.result$score
             
@@ -89,7 +88,7 @@ greedyModuleSelection <- function(nodeNr, graph, data, phenotype, covars = NULL,
                 rm(tmp)
             }else{
                 current <- calculateModuleScore(graph, new_module, data, phenotype, 
-                                                covars, representative.method = representative.method, 
+                                                covars, representativeFunction = representativeFunction, 
                                                 scoringFunction = scoringFunction)
                 current.score <- current$score
                 current.beta <- current$beta
